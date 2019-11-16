@@ -1,0 +1,76 @@
+1.Functional dependencies: For each of the following sets of functional dependencies on a Schema r(A, B, C, D, E)
+o Find a candidate key for this schema
+o Find the attribute closure of AB
+1. AB --> C, D --> E, B --> E
+2. A --> CD, B --> DE
+3. AB --> C, C --> D
+
+Solution :
+1.1.
+Candidate key -> ABD
+(AB)+ = ABC
+1.2.
+Candidate key -> AB
+(AB)+ = ABCDEF
+1.3.
+Candidate key -> ABE
+(AB)+ = ABCD
+
+
+2. Normalization 1: For each of the following set of functional dependencies, decompose
+relation r into BCNF
+1. AB --> C, D --> E, B --> E
+2. A --> CD, B --> DE
+3. AB --> C, C --> D
+
+Solution :
+2.1.
+Given relations in the 1nf form , we need to convert into the the 2nf form , To convert into the second normal form we need to remove all the partial dependencies.
+Candidate Key --> ABD.
+Prime attribute = A,B,D.
+Non - prime attribute = C,E.
+
+AB --> C  i,e. subset-of-candidate-key --> non-prime-attribute (partial dependences)
+r1(ABC)
+D --> E  i,e. subset-of-candidate-key --> non-prime-attribute (partial dependences)
+r2(DE)
+B --> E i,e. subset-of-candidate-key --> non-prime-attribute (partial dependences)
+r3(BE)
+
+Now the relations in 2nf , hence we need to convert into the 3nf . To convert into 3nf we need to remove all the trasitive dependences.
+r1 : ABC it contain the trasitive dependences. because AB -->C AND B-->E.
+So r1 :ABCE
+ r11 : ABC
+ r12 : BE
+
+r2 : DE . 
+
+so final decompoisition look like (ABC)(BE)(DE)(ABD).
+
+2.2.
+Candidate key -->AB
+Prime attribute : A,B.
+Non-prime attribute : C,D,E .
+So final decomposition look like (ACD)(BDE)(AB).
+
+2.3.
+Candidat key --> ABE.
+Prime attribute : A,B,E.
+Non-prime attribe : C,D.
+So final decomposition look like (ABC)(CD)(ABE).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
