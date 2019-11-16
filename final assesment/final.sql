@@ -109,7 +109,7 @@ end $$
 delimiter ;
 select totalinaug();
 
-
+--8 , 9
 set @incomegrosvernorhotel = 0 ;
 set @lostgrosvernorhotel = 0;
 set @maxprofit = 0;
