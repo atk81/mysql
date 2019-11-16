@@ -103,7 +103,7 @@ returns int
 deterministic
 begin
 declare total int ;
-select count(*) into total from booking where dateto is NULL or month(datefrom) = 7 or moth(dateto) = 7 or year(dateto) - year(datefrom)>=1;
+select count(*) into total from booking where dateto is NULL or month(datefrom) = 7 or month(dateto) = 7 or year(dateto) - year(datefrom)>=1;
 return total ;
 end $$
 delimiter ;
