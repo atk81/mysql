@@ -1,5 +1,5 @@
-create database test13;
-use test13;
+create database test25;
+use test25;
 create table hotel 
 (
 hotelno varchar(225) primary key ,
@@ -76,72 +76,62 @@ insert into booking values('dc01', 10007, '2004-05-13', '2004-05-15', 1001);
 insert into booking values('dc01', 10003, '2004-05-20', null, 1001);
 select * from booking ;
 
+--2.
+update room set price = (price*105)/100;
+
 --3.
-update table room set price = price + price *0.05 ;
+select guestname , guestaddress from guest where guestno in
+(select distinct guestno from booking where hotelno in
+(
+    select hotelno from hotel where city = 'london'
+)) order by guestname asc ;
 
 --4.
-select * from room where price < 40 and type in ('double','family') order by price asc ;
-
---5.
 select * from booking where dateto is NULL ;
 
---6.
-set @total = 0 ;
+--5.
 delimiter $$
-create procedure  totaldouble()
-begin
-select sum(price) into @total from room where type ='double';
-end$$
-delimiter ;
-call totaldouble();
-select @total ;
-
---7.
-delimiter $$
-create function totalinaug()
-returns int 
+create function noofhotel()
+returns int
 deterministic
 begin
 declare total int ;
-select count(*) into total from booking where dateto is NULL or month(datefrom) = 7 or month(dateto) = 7 or year(dateto) - year(datefrom)>=1;
-return total ;
-end $$
+select count(*) into total from hotel ;
+return total;
+end ; $$
 delimiter ;
-select totalinaug();
+select noofhotel();
 
---8 , 9
-set @incomegrosvernorhotel = 0 ;
-set @lostgrosvernorhotel = 0;
-set @maxprofit = 0;
+--6.
+create procedure totalrevenue() 
+select sum(price) from room where type = 'double';
+call totalrevenue();
 
-select sum(price) into @maxprofit from room where hotelno='fb01';
+--7.
+select type , price from room where hotelno = 'fb01';
 
-select @maxprofit ;
+--8.
+create view guestbooking as
+select e1.roomno as roomno , e1.hotelno as hotelno, e1.guestno as guestno , e2.guestname
+from booking as e1
+inner join guest as e2
+on e1.guestno = e2.guestno
+where e1.hotelno = 'fb01' ;
 
-select sum(price) into @incomegrosvernorhotel from room where roomno in
-(select roomno from booking where (dateto is NULL or ( datefrom <= CURRENT_DATE() and dateto >=CURRENT_DATE())) and hotelno='fb01') and hotelno='fb01';
+select e2.hotelno ,e2.roomno ,  e1.type , e1.price , e2.guestno ,e2.guestname from room as e1
+inner join guestbooking as e2
+on e1.roomno = e2.roomno ;
 
-select @incomegrosvernorhotel ;
-set @lostgrosvernorhotel = @maxprofit - @incomegrosvernorhotel ;
-
-select @lostgrosvernorhotel ;
+--9.
+select * from room where roomno in (
+    select roomno from booking where dateto < CURRENT_DATE() or datefrom > CURRENT_DATE() and hotelno='fb01'
+) and hotelno = 'fb01';
 
 --10.
-select count(*) , hotelno from room where hotelno in
-(select hotelno from hotel where city = 'london')
-group by hotelno ;
+select count(*) as totalhotel , hotelno from room group by hotelno ;
 
 --11.
-create view another as
-select count(*) as total , type from room where hotelno in
-(select hotelno from hotel where city = 'london')
-group by type ;
-
-select max(total) from another ;
-
-select * from another where total in
-(select max(total) from another );
-
+--!Didn't able to solve..
 
 --12.
 create table newbooking
@@ -152,7 +142,6 @@ datefrom date ,
 dateto date ,
 roomno int 
 );
-
 
 insert into newbooking select * from newbooking where dateto is NULL or dateto > '2007-12-31';
 
@@ -195,5 +184,4 @@ insert into opr values(CURRENT_DATE(), 'updation') ;
 end $$
 
 delimiter ;
-
 
