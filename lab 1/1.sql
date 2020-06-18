@@ -42,7 +42,7 @@ insert into project values(103,104,'dbms');
 insert into workson (empid,projno)
 values(1,100);
 insert into workson values(1,110);
-insert into worksonvalues(2,104);
+insert into workson values(2,104);
 insert into workson values(2,105);
 insert into workson values(2,100);
 insert into workson values(4,105);
